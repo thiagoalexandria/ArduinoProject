@@ -14,10 +14,10 @@
 #include <Flash.h>
 
 //Configurações modulo Ethernet
-static byte mac[] = {}; 			//Endereço MAC do arduino
-static byte ip[] = {};				//Endereço IP do arduino
-static byte gateway[]={};			//Gateway da red
-static byte subnet[] = {};			//Mascara de subrede
+static byte mac[] = { }; 	  		//Endereço MAC do arduino
+static byte ip[] = {192,168,0,3};			//Endereço IP do arduino
+static byte gateway[]={192,168,0,1};			//Gateway da red
+static byte subnet[] = {255,255,255,0};			//Mascara de subrede
 
 
 
