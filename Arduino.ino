@@ -27,7 +27,6 @@ String cmd;                     //ZABBIX COMAND
 int counter = 1;                //COUNTER FOR COMANDS
 int limite = 1;                 //COMAND SIZE
 boolean connected = false;      //CONNECTED OR NOT
-int pirWaitTime = 20000;       //LONG WAIT AFK
 
 
 void readTelnetCommand(char c) {
