@@ -9,19 +9,19 @@
 * a NBR 5413 de iluminação de interiores.
 ******************************************/
    
-int LDR1 = ?; //Escolher porta analógica utilizada pelo LDR   
-int LDR2 = ?; //Escolher porta analógica utilizada pelo LDR   
-int LDR3 = ?; //Escolher porta analógica utilizada pelo LDR   
-int LDR4 = ?; //Escolher porta analógica utilizada pelo LDR   
+int LDR1 = 0; //Escolher porta analógica utilizada pelo LDR   
+int LDR2 = 0; //Escolher porta analógica utilizada pelo LDR   
+int LDR3 = 0; //Escolher porta analógica utilizada pelo LDR   
+int LDR4 = 0; //Escolher porta analógica utilizada pelo LDR   
 
    
 void iluminacao()  
 {  
 
-  int state_ldr1 = analogRead(portaLDR1);  //Lê o valor fornecido pelo LDR 1 
-  int state_ldr2 = analogRead(portaLDR2);  //Lê o valor fornecido pelo LDR 2
-  int state_ldr3 = analogRead(portaLDR3);  //Lê o valor fornecido pelo LDR 3
-  int state_ldr4 = analogRead(portaLDR4);  //Lê o valor fornecido pelo LDR 4
+  int state_ldr1 = analogRead(LDR1);  //Lê o valor fornecido pelo LDR 1 
+  int state_ldr2 = analogRead(LDR2);  //Lê o valor fornecido pelo LDR 2
+  int state_ldr3 = analogRead(LDR3);  //Lê o valor fornecido pelo LDR 3
+  int state_ldr4 = analogRead(LDR4);  //Lê o valor fornecido pelo LDR 4
 
   int state_med = ((state_ldr1 + state_ldr2 + state_ldr3 + state_ldr4) /4); 
 
