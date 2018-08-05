@@ -3,23 +3,32 @@
 * Arduino TCC Project / Mais informações em breve
 * João Pessoa - PB / 04/08/2018
 * 
-* Esta função irá ler os valores coletados no LDR e retornará 
-* o resultado obtido por ele.
+* Esta função irá ler os valores coletados nos
+* sensores LDR e retornará a media de iluminação
+* obtida entre eles, exibindo o resultado em res-
+* posta serial.
 ******************************************/
    
-int LDR1 = 0; //Escolher porta analógica utilizada pelo LDR    
-int ValLDR= 0; //Valor coletado;
+int LDR1 = A0; 
+int LDR2 = A1;
+int LDR3 = A2;
+
+int sensor1 = 0;
+int sensor2 = 0;
+int sensor3 = 0;
+int media=0;
 
 void setup() {
- Serial.begin(9600); //Inicia a comunicação serial
+  Serial.begin(9600); //Inicia a comunicação serial
 }
- 
-void loop() {
 
+void loop() {
+ sensor1 = analogRead(LDR1);
+ sensor2 = analogRead(LDR2);
+ sensor3 = analogRead(LDR3);
  
- ValLDR = analogRead(LDR1); //O valor lido será entre 0 e 1023
- 
- //imprime o valor lido do LDR no monitor serial
- Serial.println(ldrValor);
- delay(100);
+ media=(sensor1+sensor2+sensor3)/3;
+ Serial.print("Media dos sensores:");
+ Serial.println(media); 
+ delay(5000);
 }
