@@ -1,10 +1,3 @@
-
-/******************************************
- * Autor: Thiago Alexandria
- * Arduino TCC Project / 
- * João Pessoa - PB / 16/02/2019
- * 
- ******************************************/
 #include <Ethernet.h>
 #include <SPI.h>
 
@@ -99,4 +92,3 @@ int ldrLer(int sensor1, int sensor2){
    MEDIA=(sensor1+sensor2)/2;
    return MEDIA;
 }
-
