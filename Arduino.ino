@@ -1,3 +1,10 @@
+/******************************************
+* Autor: Thiago Alexandria
+* Arduino TCC Project / Mais informações em breve
+* João Pessoa - PB / 03/03/2019
+* 
+******************************************/
+
 #include <Ethernet.h>
 #include <SPI.h>
 
