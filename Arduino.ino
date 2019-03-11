@@ -18,16 +18,22 @@
 #define ZABBIXPING 1          //Resposta Ping 
 #define ZABBIXPROTOCOL 3.4    //Versão do protocolo 3.4
 #define ITEMS_SIZE  7         //TAMANHO MÁXIMO DA LSITA DE ITENS
+#define PINO_ZC 2             //Pino Zecros
+#define PINO_DIM 9            //Pino Dimmer
 
-//VARIÁVEIS NÃO GLOBAIS
 //COMANDOS ACEITOS
 String items[] = { "agent.ping", "agent.hostname", "agent.version", "agent.ldr", "agent.uso" };
+
 //HOSTNAME DO DISPOSITIVO
 String hostname = "tcc-monitor";
+
 //SENSORES
-int LDR1 = A0; int LDR2 = A1;
+int LDR1 = A0; int LDR2 = A1; int LDR3 = A2; int LDR4 = A3
+
 //OUTRAS VARIÁVEIS
-int sensor1 = 0; int sensor2 = 0; int MEDIA = 0; String msg ="";
+int state_ldr1 = 0; int state_ldr2 = 0;
+int state_ldr3 = 0; int state_ldr4 = 0;
+int state_media = 0; String msg ="";
 
 //INICIANDO O SERVER NA PORTA 10050
 EthernetServer server = EthernetServer(LISTENPORT);
@@ -40,6 +46,8 @@ void setup() {
   delay(1000);
   Ethernet.begin(mac,ip);
   server.begin();
+  pinMode(PINO_DIM, OUTPUT);
+  attachInterrupt(0, zeroCross, RISING);
 }
 
 //LOOP COM O SWITCH CASE RESPONSÁVEL POR RECEBER
@@ -62,10 +70,10 @@ void loop() {
             server.println(ZABBIXPROTOCOL);
             break;
           case 3:
-            server.println(ldrLer(sensor1,sensor2));
+            server.println(ldrLer(state_ldr1,state_ldr2,state_ldr3,state_ldr4));
             break;
           case 4:
-            server.println(USO);
+            server.println();
             break;
           default:
             server.println("ZBX_NOTSUPPORTED");
@@ -82,6 +90,7 @@ void loop() {
 
 //FUNÇÃO PARA TRATAR O COMANDO RECEBIDO E BUSCAR
 //NA LISTA DE COMANDOS A SUA POSIÇÃO NA LISTA
+
 int findId(String text) {
   int returnValue=-1;
   for (int i=0; i < ITEMS_SIZE; i++){
@@ -93,9 +102,23 @@ int findId(String text) {
 }
 
 //FUNÇÃO PARA LEITURA E RETORNO DA MÉDIA DOS LDRS
-int ldrLer(int sensor1, int sensor2){
-   sensor1 = analogRead(LDR1);
-   sensor2 = analogRead(LDR2);
-   MEDIA=(sensor1+sensor2)/2;
-   return MEDIA;
+int ldrLer(int state_ldr1, int state_ldr2, int state_ldr3, int state_ldr4){
+
+   state_ldr1 = analogRead(LDR1);
+   state_ldr2 = analogRead(LDR2);
+   state_ldr3 = analogRead(LDR3);
+   state_ldr4 = analogRead(LDR4);
+
+   state_media=(state_ldr1+state_ldr2+state_ldr3+state_ldr4)/4;
+   return state_media;
+}
+
+void zeroCross()  {
+  if (luminosidade>100) luminosidade=100;
+  if (luminosidade<0) luminosidade=0;
+  long t1 = 8200L * (100L - luminosidade) / 100L;      
+  delayMicroseconds(t1);   
+  digitalWrite(PINO_DIM, HIGH);  
+  delayMicroseconds(6);      // t2
+  digitalWrite(PINO_DIM, LOW);   
 }
