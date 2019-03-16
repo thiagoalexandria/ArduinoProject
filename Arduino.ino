@@ -28,12 +28,13 @@ String items[] = { "agent.ping", "agent.hostname", "agent.version", "agent.ldr",
 String hostname = "tcc-monitor";
 
 //SENSORES
-int LDR1 = A0; int LDR2 = A1; int LDR3 = A2; int LDR4 = A3
+int LDR1 = A0; int LDR2 = A1; int LDR3 = A2; int LDR4 = A3;
 
 //OUTRAS VARIÁVEIS
 int state_ldr1 = 0; int state_ldr2 = 0;
 int state_ldr3 = 0; int state_ldr4 = 0;
 int state_media = 0; String msg ="";
+volatile long luminosidade = 0;  // 0 a 100 
 
 //INICIANDO O SERVER NA PORTA 10050
 EthernetServer server = EthernetServer(LISTENPORT);
@@ -73,7 +74,7 @@ void loop() {
             server.println(ldrLer(state_ldr1,state_ldr2,state_ldr3,state_ldr4));
             break;
           case 4:
-            server.println();
+            server.println(usoEnerga());
             break;
           default:
             server.println("ZBX_NOTSUPPORTED");
@@ -121,4 +122,30 @@ void zeroCross()  {
   digitalWrite(PINO_DIM, HIGH);  
   delayMicroseconds(6);      // t2
   digitalWrite(PINO_DIM, LOW);   
+}
+
+int usoEnerga(){
+
+  if (state_media > 500){
+    for (byte i=10; i<50; i++) {
+      luminosidade=25;
+      return luminosidade;
+     delay(15);     
+    }
+  }
+  if (state_media < 500 && state_media > 300){
+    for (byte i=10; i<50; i++) {
+      luminosidade=50;
+      return luminosidade;
+     delay(15);     
+    }
+  }
+  if (state_media < 300){
+    for (byte i=10; i<50; i++) {
+      luminosidade=90;
+      return luminosidade;
+     delay(15);     
+    }
+  }
+
 }
