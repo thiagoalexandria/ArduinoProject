@@ -23,8 +23,6 @@
 #define ZABBIXPING 1          //Resposta Ping 
 #define ZABBIXPROTOCOL 3.4    //Versão do protocolo 3.4
 #define ITEMS_SIZE  7         //TAMANHO MÁXIMO DA LSITA DE ITENS
-#define PINO_ZC 2             //Pino Zecros
-#define PINO_DIM 9            //Pino Dimmer
 
 //LISTA DE COMANDOS ACEITOS
 String items[] = { "agent.ping", "agent.hostname", "agent.version", "agent.ldr", "agent.uso" };
@@ -46,7 +44,6 @@ EthernetServer server = EthernetServer(LISTENPORT);
 //SETUP, INICIANDO O DISPOSITIVO
 void setup() {
   //NETWORK
-  Serial.begin(9600);
   uint8_t mac[6] = {MACADDRESS};
   uint8_t ip[4] = {IP};
   delay(1000);
@@ -118,6 +115,6 @@ int ldrLer(int state_ldr1, int state_ldr2, int state_ldr3, int state_ldr4){
 }
 
 int usoEnerga(int uso){
-  uso=Serial.read();
-  return uso;
+  uso=Serial.parseInt();
+  return uso;   
 }
