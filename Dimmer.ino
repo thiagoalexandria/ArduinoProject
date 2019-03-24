@@ -35,7 +35,6 @@ void zeroCross()  {
 void setup() {
   pinMode(PINO_DIM, OUTPUT);
   attachInterrupt(0, zeroCross, RISING);
-  Serial.begin(9600);
 }
  
 void loop() {
