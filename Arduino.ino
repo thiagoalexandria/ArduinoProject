@@ -1,8 +1,14 @@
 /******************************************
 * Autor: Thiago Alexandria
 * Arduino TCC Project / Mais informações em breve
-* João Pessoa - PB / 03/03/2019
+* João Pessoa - PB / 23/03/2019
 * 
+* INTERNET DAS COISAS: REDUÇÃO E MONITORAMENTO DE GASTOS COM ILUMINAÇÃO
+* Função Responsável por iniciar a placa Master e por a manter conectada
+* ao zabbix, devido a limitações na troca de informações por RxTx foi pre-
+* ferível utilziar essa placa também para coleta das informações de iluminação
+* sendo necessário apenas a troca da informação sobre a utilização de energia
+* através da conexão RxTx 
 ******************************************/
 
 #include <Ethernet.h>
@@ -14,27 +20,25 @@
 #define LISTENPORT 10050
 
 //VARIÁVEIS GLOBAIS
-#define USO 15                // Valor fixo para uso em %
 #define ZABBIXPING 1          //Resposta Ping 
 #define ZABBIXPROTOCOL 3.4    //Versão do protocolo 3.4
 #define ITEMS_SIZE  7         //TAMANHO MÁXIMO DA LSITA DE ITENS
 #define PINO_ZC 2             //Pino Zecros
 #define PINO_DIM 9            //Pino Dimmer
 
-//COMANDOS ACEITOS
+//LISTA DE COMANDOS ACEITOS
 String items[] = { "agent.ping", "agent.hostname", "agent.version", "agent.ldr", "agent.uso" };
 
 //HOSTNAME DO DISPOSITIVO
 String hostname = "tcc-monitor";
 
 //SENSORES
-int LDR1 = A0; int LDR2 = A1; int LDR3 = A2; int LDR4 = A3;
+int LDR1 = A0, LDR2 = A1, LDR3 = A2,LDR4 = A3;
 
 //OUTRAS VARIÁVEIS
-int state_ldr1 = 0; int state_ldr2 = 0;
-int state_ldr3 = 0; int state_ldr4 = 0;
-int state_media = 0; String msg ="";
-volatile long luminosidade = 0;  // 0 a 100 
+int uso, state_ldr1 = 0, state_ldr2 = 0, state_ldr3 = 0, state_ldr4 = 0;
+int state_media = 0;
+String msg ="";
 
 //INICIANDO O SERVER NA PORTA 10050
 EthernetServer server = EthernetServer(LISTENPORT);
@@ -42,13 +46,12 @@ EthernetServer server = EthernetServer(LISTENPORT);
 //SETUP, INICIANDO O DISPOSITIVO
 void setup() {
   //NETWORK
+  Serial.begin(9600);
   uint8_t mac[6] = {MACADDRESS};
   uint8_t ip[4] = {IP};
   delay(1000);
   Ethernet.begin(mac,ip);
   server.begin();
-  pinMode(PINO_DIM, OUTPUT);
-  attachInterrupt(0, zeroCross, RISING);
 }
 
 //LOOP COM O SWITCH CASE RESPONSÁVEL POR RECEBER
@@ -74,7 +77,7 @@ void loop() {
             server.println(ldrLer(state_ldr1,state_ldr2,state_ldr3,state_ldr4));
             break;
           case 4:
-            server.println(usoEnerga());
+            server.println(usoEnerga(uso));
             break;
           default:
             server.println("ZBX_NOTSUPPORTED");
@@ -114,38 +117,7 @@ int ldrLer(int state_ldr1, int state_ldr2, int state_ldr3, int state_ldr4){
    return state_media;
 }
 
-void zeroCross()  {
-  if (luminosidade>100) luminosidade=100;
-  if (luminosidade<0) luminosidade=0;
-  long t1 = 8200L * (100L - luminosidade) / 100L;      
-  delayMicroseconds(t1);   
-  digitalWrite(PINO_DIM, HIGH);  
-  delayMicroseconds(6);      // t2
-  digitalWrite(PINO_DIM, LOW);   
-}
-
-int usoEnerga(){
-
-  if (state_media > 500){
-    for (byte i=10; i<50; i++) {
-      luminosidade=25;
-      return luminosidade;
-     delay(15);     
-    }
-  }
-  if (state_media < 500 && state_media > 300){
-    for (byte i=10; i<50; i++) {
-      luminosidade=50;
-      return luminosidade;
-     delay(15);     
-    }
-  }
-  if (state_media < 300){
-    for (byte i=10; i<50; i++) {
-      luminosidade=90;
-      return luminosidade;
-     delay(15);     
-    }
-  }
-
+int usoEnerga(int uso){
+  uso=Serial.read();
+  return uso;
 }
