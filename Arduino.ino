@@ -34,7 +34,7 @@ String hostname = "tcc-monitor";
 int LDR1 = A0, LDR2 = A1, LDR3 = A2,LDR4 = A3;
 
 //OUTRAS VARIÁVEIS
-int uso, state_ldr1 = 0, state_ldr2 = 0, state_ldr3 = 0, state_ldr4 = 0;
+int uso, var, state_ldr1 = 0, state_ldr2 = 0, state_ldr3 = 0, state_ldr4 = 0;
 int state_media = 0;
 String msg ="";
 
@@ -115,6 +115,19 @@ int ldrLer(int state_ldr1, int state_ldr2, int state_ldr3, int state_ldr4){
 }
 
 int usoEnerga(int uso){
-  uso=Serial.parseInt();
-  return uso;   
+  var=Serial.read() -'0';
+
+  if (var==1){
+    uso=25;
+    return uso;
+  }
+  if (var==2){
+    uso=50;
+    return uso;
+  }
+  if (var==3){
+    uso=90;
+    return uso;
+  }
+   
 }
