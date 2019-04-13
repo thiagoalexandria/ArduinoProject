@@ -115,19 +115,20 @@ int ldrLer(int state_ldr1, int state_ldr2, int state_ldr3, int state_ldr4){
 }
 
 int usoEnerga(int uso){
-  var=Serial.read() -'0';
 
-  if (var==1){
-    uso=25;
-    return uso;
+ if (state_media > 500){
+      uso=25;
+      return uso;
   }
-  if (var==2){
-    uso=50;
-    return uso;
+  
+  if (state_media < 500 && state_media > 300){
+        uso=50;
+        return uso;
+   }
+
+  if (state_media < 300){
+      uso=90;
+      return uso;
   }
-  if (var==3){
-    uso=90;
-    return uso;
-  }
-   
+ 
 }
