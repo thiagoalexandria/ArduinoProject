@@ -3,12 +3,11 @@
 * Arduino TCC Project / Mais informações em breve
 * João Pessoa - PB / 03/03/2019
 * 
-* Esta função será aplicada a placa Slave do projeto, essa placa será responsável 
+* Esta função será aplicada a placa Dimmerizadora do projeto, essa placa será responsável 
 * por realizar a leitura constante dos valores obtidos através dos LDRS. Baseado 
-* na média de Lux obtidos a placa encaminhará os valores para o módulo dimmer rea- 
-* lizando a dimerização das lampadas de  acordo com a NBR 5413 de iluminação de 
-* interiores, encaminhando os dados de energia para a placa Master através de uma
-* comunicação serial. 
+* na média do valor coletado pelos LDR a placa encaminhará os valores para o módulo dimmer rea- 
+* lizando a dimerização das lâmpadas de  acordo com a NBR 5413 de iluminação de 
+* interiores.
 
 ******************************************/
 
@@ -49,7 +48,6 @@ void loop() {
  if (state_media > 500){
     for (byte i=10; i<50; i++) {
       luminosidade=25;
-      Serial.write(1);
       delay(15);     
     }
   }
@@ -57,7 +55,6 @@ void loop() {
   if (state_media < 500 && state_media > 300){
     for (byte i=10; i<50; i++) {
       luminosidade=50;
-      Serial.write(2);
      delay(15);     
     }
   }
@@ -65,7 +62,6 @@ void loop() {
   if (state_media < 300){
     for (byte i=10; i<50; i++) {
       luminosidade=90;
-      Serial.write(3);
      delay(15);     
     }
   }

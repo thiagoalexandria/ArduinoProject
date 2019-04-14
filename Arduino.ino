@@ -4,11 +4,10 @@
 * João Pessoa - PB / 23/03/2019
 * 
 * INTERNET DAS COISAS: REDUÇÃO E MONITORAMENTO DE GASTOS COM ILUMINAÇÃO
-* Função Responsável por iniciar a placa Master e por a manter conectada
-* ao zabbix, devido a limitações na troca de informações por RxTx foi pre-
-* ferível utilziar essa placa também para coleta das informações de iluminação
-* sendo necessário apenas a troca da informação sobre a utilização de energia
-* através da conexão RxTx 
+* Função Responsável por iniciar o Agente Zabbix e por a manter conectada
+* ao servidor, essa placa, assim como a dimmer, coletará os valores dos 
+* sensores LDR e utilizará da mesma lógica imposta na outra placa para  
+* retornanar a utilização de energia em %. 
 ******************************************/
 
 #include <Ethernet.h>
@@ -48,7 +47,6 @@ void setup() {
   uint8_t ip[4] = {IP};
   delay(1000);
   Ethernet.begin(mac,ip);
-  server.begin();
 }
 
 //LOOP COM O SWITCH CASE RESPONSÁVEL POR RECEBER
@@ -115,20 +113,16 @@ int ldrLer(int state_ldr1, int state_ldr2, int state_ldr3, int state_ldr4){
 }
 
 int usoEnerga(int uso){
-
  if (state_media > 500){
       uso=25;
       return uso;
   }
-  
   if (state_media < 500 && state_media > 300){
         uso=50;
         return uso;
    }
-
   if (state_media < 300){
       uso=90;
       return uso;
   }
- 
 }
